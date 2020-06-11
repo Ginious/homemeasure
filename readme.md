@@ -2,7 +2,7 @@
 
 # What is Home Measure?
 
-HM is a small system to gather measures like e.g. temperature from a sensor, amount of produced power from a PV DC-AC converter or the amount of electricity currently being consumed.
+HM is a small system implemented in Java (Spring Boot) to gather measures like e.g. temperature from a sensor, amount of produced power from a PV DC-AC converter or the amount of electricity currently being consumed.
 For further processing purposes measures can optionally be sent to a MQTT broker, stored in a time series or a relational database system. 
 
 The system is written in Java and comes as a stand-alone Spring Boot application that can directly be started.
@@ -21,7 +21,7 @@ A device represents a physical device like e.g.
 
 A device provides measures like e.g.
 
- - current temperature (°C, °F, etc.)
+ - current temperature (Â°C, Â°F, etc.)
  - amount of electricity (KWh)
  - produced power (W)
 
