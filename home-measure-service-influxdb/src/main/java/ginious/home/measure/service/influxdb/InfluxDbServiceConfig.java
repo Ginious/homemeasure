@@ -19,7 +19,7 @@ import lombok.Setter;
 // Spring
 @Configuration
 @ConfigurationProperties(InfluxDbServiceConfig.CONFIG_PREFIX)
-@PropertySource("classpath:influxdbservice-default.properties")
+@PropertySource("classpath:influxdb-service-default.properties")
 public class InfluxDbServiceConfig implements ginious.home.measure.model.Configuration {
 
   public static final String CONFIG_PREFIX = "service.influxdb";
