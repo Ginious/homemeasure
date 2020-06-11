@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>ginious.home.measure</groupId>
+	<artifactId>hm-mmbuild</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>HomeMeasure Multi Module Build</name>
+
+	<modules>
+		<module>home-measure-device-demo</module>
+		<module>home-measure-device-radio</module>
+		<module>home-measure-device-sma</module>
+		<module>home-measure-device-volkszaehler</module>
+		<module>home-measure-model</module>
+		<module>home-measure-parent</module>
+		<module>home-measure-serializer</module>
+		<module>home-measure-server</module>
+		<module>home-measure-service-influxdb</module>
+		<module>home-measure-service-jdbc</module>
+		<module>home-measure-service-mqtt</module>
+	</modules>
+
+</project>

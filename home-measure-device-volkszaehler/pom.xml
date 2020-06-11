@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>ginious.home.measure</groupId>
+		<artifactId>hm-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	
+	<groupId>ginious.home.measure.device</groupId>
+	<artifactId>hm-volkszaehler</artifactId>
+
+	<name>HomeMeasure device Volkszaehler</name>
+	<description>Device for getting measures from the Volkszaehler USB dongle via IR</description>
+
+	<dependencies>
+
+		<!-- HomeMeasure -->
+		<dependency>
+			<groupId>ginious.home.measure</groupId>
+			<artifactId>hm-model</artifactId>
+		</dependency>
+
+		<!-- Volkszaehler Libs -->
+		<dependency>
+			<groupId>org.openmuc</groupId>
+			<artifactId>jsml</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openmuc</groupId>
+			<artifactId>jrxtx</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		
+		<!-- Spring -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- 3rd Party Libs -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.10</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
