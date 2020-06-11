@@ -10,7 +10,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>server</artifactId>
+	<artifactId>hm-server</artifactId>
 
 	<name>HomeMeasure Server</name>
 	<description>Server part of HomeMeasure providing the entry point
