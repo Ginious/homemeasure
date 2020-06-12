@@ -33,10 +33,6 @@ public class RadioReceiverDevice extends AbstractMeasurementDevice {
   @Autowired
   private RadioConfig config;
 
-  public RadioReceiverDevice() {
-    super("radio");
-  }
-
   /**
    * Registry containing all items defined in hmserver.ini.
    */
@@ -49,14 +45,11 @@ public class RadioReceiverDevice extends AbstractMeasurementDevice {
 
   /**
    * Default constructor.
-   * 
-   * @param inDeviceId
-   *          The id of the device.
    */
-  public RadioReceiverDevice(String inDeviceId) {
-    super(inDeviceId);
+  public RadioReceiverDevice() {
+    super();
   }
-
+  
   /**
    * Creates and initializes the RTL_433 process and provides a stub for accessing
    * the resulting data.

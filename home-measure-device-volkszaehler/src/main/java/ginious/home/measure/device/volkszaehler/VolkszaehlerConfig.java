@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import ginious.home.measure.model.DeviceConfiguration;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -21,8 +22,8 @@ import lombok.Setter;
 // Spring
 @Configuration
 @ConfigurationProperties(VolkszaehlerConfig.CONFIG_PREFIX)
-@PropertySource("classpath:volkszaehler-default.properties")
-public class VolkszaehlerConfig implements ginious.home.measure.model.Configuration {
+@PropertySource("classpath:volkszaehler-device-default.properties")
+public class VolkszaehlerConfig implements DeviceConfiguration {
   
   public static final String CONFIG_PREFIX = "device.volkszaehler";
   

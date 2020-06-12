@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import ginious.home.measure.model.ServiceConfiguration;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @Configuration
 @ConfigurationProperties(JdbcServiceConfig.CONFIG_PREFIX)
 @PropertySource("classpath:jdbc-service-default.properties")
-public class JdbcServiceConfig implements ginious.home.measure.model.Configuration {
+public class JdbcServiceConfig implements ServiceConfiguration {
 
   public static final String CONFIG_PREFIX = "service.jdbc";
 

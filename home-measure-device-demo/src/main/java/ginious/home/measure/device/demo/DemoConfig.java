@@ -5,6 +5,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import ginious.home.measure.model.Configuration;
+import ginious.home.measure.model.DeviceConfiguration;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -21,7 +22,7 @@ import lombok.Setter;
 @Component
 @ConfigurationProperties(DemoConfig.CONFIG_PREFIX)
 @PropertySource("classpath:demo-device-default.properties")
-public class DemoConfig implements Configuration {
+public class DemoConfig implements DeviceConfiguration {
 
   public static final String CONFIG_PREFIX = "device.demo";
 

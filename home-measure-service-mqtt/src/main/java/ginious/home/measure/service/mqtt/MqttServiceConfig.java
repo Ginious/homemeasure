@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import ginious.home.measure.model.ServiceConfiguration;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @Configuration
 @ConfigurationProperties(MqttServiceConfig.CONFIG_PREFIX)
 @PropertySource("classpath:mqtt-service-default.properties")
-public class MqttServiceConfig implements ginious.home.measure.model.Configuration {
+public class MqttServiceConfig implements ServiceConfiguration {
 
   public static final String CONFIG_PREFIX = "service.mqtt";
   

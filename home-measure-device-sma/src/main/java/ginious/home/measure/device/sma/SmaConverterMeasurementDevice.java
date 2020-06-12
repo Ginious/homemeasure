@@ -75,12 +75,9 @@ public class SmaConverterMeasurementDevice extends AbstractMeasurementDevice {
 
   /**
    * Default device constructor.
-   * 
-   * @param inId
-   *          The id of this device.
    */
-  public SmaConverterMeasurementDevice(String inId) {
-    super(inId);
+  public SmaConverterMeasurementDevice() {
+    super();
   }
 
   /**

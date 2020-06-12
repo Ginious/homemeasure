@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+import ginious.home.measure.model.DeviceConfiguration;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
@@ -19,8 +20,8 @@ import lombok.Setter;
 // Spring
 @Configuration
 @ConfigurationProperties(SmaConverterConfig.CONFIG_PREFIX)
-@PropertySource("classpath:smaconverter-default.properties")
-public class SmaConverterConfig implements ginious.home.measure.model.Configuration {
+@PropertySource("classpath:smaconverter-device-default.properties")
+public class SmaConverterConfig implements DeviceConfiguration {
 
   public static final String CONFIG_PREFIX = "device.smaconverter";
 

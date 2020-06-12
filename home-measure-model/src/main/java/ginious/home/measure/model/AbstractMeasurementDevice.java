@@ -42,20 +42,14 @@ public abstract class AbstractMeasurementDevice implements MeasurementDevice {
 
   /**
    * Default constructor.
-   * 
-   * @param inId
-   *          The id of the device (required).
    */
-  protected AbstractMeasurementDevice(String inId) {
+  protected AbstractMeasurementDevice() {
     super();
 
-    Validate.isTrue(StringUtils.isNotBlank(inId), "inId is required!");
-    String lowerCaseId = inId.toLowerCase();
-    Validate.isTrue(!deviceIds.contains(lowerCaseId),
-        "Device with id [" + lowerCaseId + "] was already registered!");
-    deviceIds.add(lowerCaseId);
-
-    id = lowerCaseId;
+    id = StringUtils.remove(getClass().getSimpleName(), MeasurementDevice.class.getSimpleName())
+        .toLowerCase();
+    Validate.isTrue(!deviceIds.contains(id), "Device with id [" + id + "] was already registered!");
+    deviceIds.add(id);
   }
 
   /**

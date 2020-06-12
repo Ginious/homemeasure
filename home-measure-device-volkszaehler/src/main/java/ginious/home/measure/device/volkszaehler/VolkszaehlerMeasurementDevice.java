@@ -55,7 +55,7 @@ public class VolkszaehlerMeasurementDevice extends AbstractMeasurementDevice {
   private SerialReceiver receiver;
 
   public VolkszaehlerMeasurementDevice() {
-    super("volkszaehler");
+    super();
   }
 
   private SerialReceiver getReceiver() {
@@ -75,12 +75,12 @@ public class VolkszaehlerMeasurementDevice extends AbstractMeasurementDevice {
         receiver = new SerialReceiver(lPort);
       }
       catch (UnsatisfiedLinkError e) {
-        log.error(MarkerFactory.getMarker(getId()), "Failed loading device driver - reason: {0}",
+        log.error(MarkerFactory.getMarker(getId()), "Failed loading device driver - reason: {}",
             e.getMessage());
       }
       catch (Throwable t) {
         log.error(MarkerFactory.getMarker(getId()),
-            "Failed to initiate communication with USB dongle - reason: {0}", t.getMessage());
+            "Failed to initiate communication with USB dongle - reason: {}", t.getMessage());
       } // catch
     } // if
 

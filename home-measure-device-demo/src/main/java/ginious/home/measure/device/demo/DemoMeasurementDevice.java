@@ -10,7 +10,7 @@ import ginious.home.measure.model.AbstractMeasurementDevice;
 @Component
 @ConditionalOnProperty(prefix = DemoConfig.CONFIG_PREFIX, name = "enabled", matchIfMissing = false)
 public class DemoMeasurementDevice extends AbstractMeasurementDevice {
-
+  
   enum Measure {
     MEASURE_1, //
     MEASURE_2, //
@@ -23,7 +23,7 @@ public class DemoMeasurementDevice extends AbstractMeasurementDevice {
   private DemoConfig config;
 
   public DemoMeasurementDevice() {
-    super("demo");
+    super();
   }
 
   @Override
@@ -42,7 +42,7 @@ public class DemoMeasurementDevice extends AbstractMeasurementDevice {
    *          The id of the device.
    */
   public DemoMeasurementDevice(String inDeviceId) {
-    super(inDeviceId);
+    super();
   }
 
   @Override
