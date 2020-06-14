@@ -5,4 +5,10 @@ package ginious.home.measure.model;
  */
 public interface Service {
 
+	/**
+	 * Gets the id of the service which is the class name without the suffix 'Service'.
+	 * .
+	 * @return The service Id.
+	 */
+	String getId();
 }
