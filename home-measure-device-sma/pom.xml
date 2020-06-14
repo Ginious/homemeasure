@@ -8,12 +8,13 @@
 		<groupId>ginious.home.measure</groupId>
 		<artifactId>hm-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../home-measure-parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>ginious.home.measure.device</groupId>
-	<artifactId>hm-sma</artifactId>
+	<artifactId>hm-device-smaconverter</artifactId>
 
-	<name>HomeMeasure device SMA Converter</name>
+	<name>HomeMeasure Device SMA Converter</name>
 	<description>Device for getting measures from a SMA converter via
 		Modbus</description>
 

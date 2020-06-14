@@ -8,12 +8,13 @@
 		<groupId>ginious.home.measure</groupId>
 		<artifactId>hm-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../home-measure-parent/pom.xml</relativePath>
 	</parent>
 
 	<groupId>ginious.home.measure.service</groupId>
-	<artifactId>hm-jdbc</artifactId>
+	<artifactId>hm-service-jdbc</artifactId>
 
-	<name>HomeMeasure JDBC</name>
+	<name>HomeMeasure Service JDBC</name>
 	<description>Demo project for Spring Boot</description>
 
 	<dependencies>

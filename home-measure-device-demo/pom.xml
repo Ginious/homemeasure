@@ -8,12 +8,13 @@
 		<groupId>ginious.home.measure</groupId>
 		<artifactId>hm-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../home-measure-parent/pom.xml</relativePath>
 	</parent>
 	
 	<groupId>ginious.home.measure.device</groupId>
-	<artifactId>hm-demo</artifactId>
+	<artifactId>hm-device-demo</artifactId>
 
-	<name>HomeMeasure device demo</name>
+	<name>HomeMeasure Device demo</name>
 	<description>Device for getting measures from an underlying configuration with random values</description>
 
 	<dependencies>

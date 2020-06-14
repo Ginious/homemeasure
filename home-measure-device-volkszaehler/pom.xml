@@ -7,12 +7,13 @@
 		<groupId>ginious.home.measure</groupId>
 		<artifactId>hm-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../home-measure-parent/pom.xml</relativePath>
 	</parent>
 	
 	<groupId>ginious.home.measure.device</groupId>
-	<artifactId>hm-volkszaehler</artifactId>
+	<artifactId>hm-device-volkszaehler</artifactId>
 
-	<name>HomeMeasure device Volkszaehler</name>
+	<name>HomeMeasure Device Volkszaehler</name>
 	<description>Device for getting measures from the Volkszaehler USB dongle via IR</description>
 
 	<dependencies>

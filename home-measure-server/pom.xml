@@ -7,6 +7,7 @@
 	<parent>
 		<groupId>ginious.home.measure</groupId>
 		<artifactId>hm-parent</artifactId>
+		<relativePath>../home-measure-parent/pom.xml</relativePath>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
@@ -21,35 +22,41 @@
 		<!-- Devices -->
 		<dependency>
 			<groupId>ginious.home.measure.device</groupId>
-			<artifactId>hm-sma</artifactId>
+			<artifactId>hm-device-demo</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ginious.home.measure.device</groupId>
+			<artifactId>hm-device-smaconverter</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ginious.home.measure.device</groupId>
-			<artifactId>hm-demo</artifactId>
+			<artifactId>hm-device-volkszaehler</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ginious.home.measure.device</groupId>
-			<artifactId>hm-volkszaehler</artifactId>
+			<artifactId>hm-device-radio</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Services -->
 		<dependency>
 			<groupId>ginious.home.measure.service</groupId>
-			<artifactId>hm-jdbc</artifactId>
+			<artifactId>hm-service-jdbc</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ginious.home.measure.service</groupId>
-			<artifactId>hm-mqtt</artifactId>
+			<artifactId>hm-service-mqtt</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>ginious.home.measure.service</groupId>
-			<artifactId>hm-influxdb</artifactId>
+			<artifactId>hm-service-influxdb</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 

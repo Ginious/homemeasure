@@ -8,12 +8,13 @@
 		<groupId>ginious.home.measure</groupId>
 		<artifactId>hm-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../home-measure-parent/pom.xml</relativePath>
 	</parent>
 	
 	<groupId>ginious.home.measure.device</groupId>
-	<artifactId>hm-radio</artifactId>
+	<artifactId>hm-device-radio</artifactId>
 
-	<name>HomeMeasure device RTL433</name>
+	<name>HomeMeasure Device RTL433</name>
 	<description>Device for getting measures from devices sending data via 433Mhz</description>
 
 	<dependencies>

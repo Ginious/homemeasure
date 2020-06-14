@@ -8,12 +8,13 @@
 		<groupId>ginious.home.measure</groupId>
 		<artifactId>hm-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../home-measure-parent/pom.xml</relativePath>
 	</parent>
 	
 	<groupId>ginious.home.measure.service</groupId>
-	<artifactId>hm-mqtt</artifactId>
+	<artifactId>hm-service-mqtt</artifactId>
 
-	<name>HomeMeasure MQTT</name>
+	<name>HomeMeasure Service MQTT</name>
 	<description>Demo project for Spring Boot</description>
 
 	<dependencies>
