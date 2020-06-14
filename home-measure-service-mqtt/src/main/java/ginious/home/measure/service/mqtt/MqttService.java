@@ -6,6 +6,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 
 import ginious.home.measure.model.AbstractService;
 import ginious.home.measure.model.Measure;
@@ -15,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
  * Service publishing measure changes to a MQTT broker.
  */
 @Slf4j
-@org.springframework.stereotype.Service
+@Service
 @ConditionalOnProperty(prefix = MqttServiceConfig.CONFIG_PREFIX, name = "enabled", matchIfMissing = false)
 public final class MqttService extends AbstractService {
 
