@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>ginious.home.measure</groupId>
 		<artifactId>hm-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>../home-measure-parent/pom.xml</relativePath>
 	</parent>
 	

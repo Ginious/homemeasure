@@ -8,7 +8,7 @@
 		<groupId>ginious.home.measure</groupId>
 		<artifactId>hm-parent</artifactId>
 		<relativePath>../home-measure-parent/pom.xml</relativePath>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>hm-server</artifactId>
@@ -23,48 +23,48 @@
 		<dependency>
 			<groupId>ginious.home.measure.device</groupId>
 			<artifactId>hm-device-demo</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>ginious.home.measure.device</groupId>
 			<artifactId>hm-device-smaconverter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ginious.home.measure.device</groupId>
 			<artifactId>hm-device-volkszaehler</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ginious.home.measure.device</groupId>
 			<artifactId>hm-device-radio</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Services -->
 		<dependency>
 			<groupId>ginious.home.measure.service</groupId>
 			<artifactId>hm-service-jdbc</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>ginious.home.measure.service</groupId>
 			<artifactId>hm-service-mqtt</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>ginious.home.measure.service</groupId>
 			<artifactId>hm-service-influxdb</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- Serializer -->
 		<dependency>
 			<groupId>ginious.home.measure.cache</groupId>
 			<artifactId>hm-serializer</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- HomeMeasure Model -->
