@@ -41,7 +41,7 @@ public final class MqttService extends AbstractService {
       if (lClient != null) {
         lClient.publish(config.getTopic_root() + "/" + inChangedMeasure.getDeviceId() + "/"
             + inChangedMeasure.getId(), inChangedMeasure.getValue().getBytes(), 0, false);
-        log.info("Published measure [{}.{}={}]", inChangedMeasure.getDeviceId(),
+        log.debug("Published measure [{}.{}={}]", inChangedMeasure.getDeviceId(),
             inChangedMeasure.getId(), inChangedMeasure.getValue());
       }
       else {
@@ -82,10 +82,10 @@ public final class MqttService extends AbstractService {
         lOptions.setPassword(config.getBroker_password().toCharArray());
       } // if
 
-      log.info("Connecting MQTT using [{}/{}]",
-          lOptions.getUserName() != null ? lOptions.getUserName() : "<anonymous>",
-          lOptions.getPassword() != null ? "*******" : "-");
-      
+      log.info("Connecting MQTT using [{}/{}] to [{}]",
+          config.getBroker_user() != null ? config.getBroker_user() : "<anonymous>",
+          config.getBroker_password() != null ? "*******" : "none", config.getBroker_url());
+
       if (config.getBroker_url() == null) {
         log.error("Setting [" + MqttServiceConfig.CONFIG_PREFIX + ".broker-url] is missing!");
         return null;
