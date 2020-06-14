@@ -47,7 +47,7 @@ public final class JdbcService extends AbstractService {
         inChangedMeasure.getDeviceId(), inChangedMeasure.getId(), inChangedMeasure.getValue(),
         new Timestamp(new Date().getTime()));
 
-    log.info("Stored measure [{}.{}={}]", inChangedMeasure.getDeviceId(),
+    log.debug("Persisted measure [{}.{}={}]", inChangedMeasure.getDeviceId(),
         inChangedMeasure.getId(), inChangedMeasure.getValue());
   }
 
