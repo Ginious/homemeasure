@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 
 import ginious.home.measure.model.AbstractService;
 import ginious.home.measure.model.Measure;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service for writing measures into an InfluxDB.
  * One InfluxDB measure will be created per device containing the HMServer measure id and its value.
  */
+@Slf4j
 @Service
 @ConditionalOnProperty(name = "enabled", havingValue = "true")
 public final class InfluxDbService extends AbstractService {
@@ -62,6 +64,10 @@ public final class InfluxDbService extends AbstractService {
           .measurement(inChangedMeasure.getDeviceId()) //
           .tag(POINT_TAG_MEASURE_ID, inChangedMeasure.getId()) //
           .addField(POINT_FIELD_VALUE, valueAsNumber).build());
+
+      log.info("Persisted measure [{}.{}={}]", inChangedMeasure.getDeviceId(),
+          inChangedMeasure.getId(), inChangedMeasure.getValue());
+      
     } // if
   }
 
@@ -74,6 +80,10 @@ public final class InfluxDbService extends AbstractService {
 
     if (influxDB == null) {
 
+      log.info("Connecting InfluxDB using [{}/{}] to [{}]",
+          config.getUser() != null ? config.getUser() : "<anonymous>",
+              config.getPassword() != null ? "*******" : "none", config.getUrl());
+      
       influxDB = InfluxDBFactory.connect(config.getUrl(), config.getUser(), config.getPassword());
 
       // gather existing database names
@@ -88,6 +98,8 @@ public final class InfluxDbService extends AbstractService {
       // create database if not yet existing
       if (!existingDbs.contains(config.getDbname())) {
         influxDB.query(new Query(String.format(QUERY_CREATE_DATABASE, config.getDbname())));
+        
+        log.info("Created database [{}]");
       } // if
 
       influxDB.setDatabase(config.getDbname());
