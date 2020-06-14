@@ -19,64 +19,84 @@ import ginious.home.measure.model.Configuration;
 import ginious.home.measure.model.DeviceConfiguration;
 import ginious.home.measure.model.MeasurementDevice;
 import ginious.home.measure.model.RunnableMeasurementDeviceSupport;
+import ginious.home.measure.model.Service;
 import ginious.home.measure.model.ServiceConfiguration;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Spring Boot application entry point logging available devices and services
+ * and their state. Active devices will be started.
+ */
 @Slf4j
 @SpringBootApplication
-@ComponentScan({"ginious.home.measure"})
+@ComponentScan({ "ginious.home.measure" })
 public class HomeMeasureApplication implements ApplicationRunner {
 
-  @Autowired
-  private ApplicationContext context;
+	@Autowired
+	private ApplicationContext context;
 
-  @Autowired
-  private ThreadPoolTaskExecutor executor;
+	@Autowired
+	private ThreadPoolTaskExecutor executor;
 
-  @Autowired(required = false)
-  private List<MeasurementDevice> devices;
+	@Autowired(required = false)
+	private List<Service> services;
 
-  public static void main(String[] args) {
+	@Autowired(required = false)
+	private List<MeasurementDevice> devices;
 
-    SpringApplication.run(HomeMeasureApplication.class, args);
-  }
+	public static void main(String[] args) {
 
-  @Override
-  public void run(ApplicationArguments inArgs) throws Exception {
+		SpringApplication.run(HomeMeasureApplication.class, args);
+	}
 
-    Set<String> lIdsOfActiveDevices = new HashSet<>();
-    if (devices != null && !devices.isEmpty()) {
-      devices.forEach(d -> {
-        executor.execute(new RunnableMeasurementDeviceSupport(d));
-        lIdsOfActiveDevices.add(d.getId());
-      });
-    }
-    else {
-      log.error(
-          "***** No devices found in classpath. They can be enabled in application.properties e.g. 'device.demo.enabled=true'");
-      System.exit(1);
-    } // else
+	@Override
+	public void run(ApplicationArguments inArgs) throws Exception {
 
-    log.info("*");
-    
-    logInfos(DeviceConfiguration.class, "Device", lIdsOfActiveDevices);
-    logInfos(ServiceConfiguration.class, "Service", new HashSet<>());
+		// identify available service ids
+		Set<String> lActiveServiceIds = new HashSet<>();
+		if (services != null) {
+			services.forEach(s -> lActiveServiceIds.add(s.getId()));
+		} // if
 
-    log.info("**************************************************");
-    log.info("*");
-    log.info(
-        "* add 'device|service.NAME.enabled=true|false' to application.properties to activate|deactivate device|service");
-  }
+		// identify available devices and start each
+		Set<String> lActiveDeviceIds = new HashSet<>();
+		if (devices != null) {
+			devices.forEach(d -> {
+				executor.execute(new RunnableMeasurementDeviceSupport(d));
+				lActiveDeviceIds.add(d.getId());
+			});
+		} else {
 
-  private void logInfos(Class<? extends Configuration> inTypeOfConfiguration, String inDisplayName,
-      Set<String> inActiveEntities) {
+			// exit when no devices are active
+			log.error(
+					"***** No devices found in classpath. They can be enabled in application.properties e.g. 'device.demo.enabled=true'");
+			System.exit(1);
+		} // else
 
-    log.info("**************************************************");
-    log.info("* {}s:", inDisplayName.toLowerCase());
-    Arrays.asList(context.getBeanNamesForType(inTypeOfConfiguration)).forEach(d -> {
+		// log devices and services
 
-      String lEntityId = StringUtils.remove(StringUtils.remove(d, "Config"), "Service");
-      log.info("* \t - {}", lEntityId + (inActiveEntities.contains(lEntityId) ? " -> active" : ""));
-    });
-  }
+		log.info("*");
+
+		logInfos(DeviceConfiguration.class, "Device", lActiveDeviceIds);
+		logInfos(ServiceConfiguration.class, "Service", lActiveServiceIds);
+
+		log.info("*************************************************************************");
+		log.info("* activate|deactivate device|service in application.properties:");
+		log.info("* 'device|service.NAME.enabled=true|false' ");
+		log.info("*************************************************************************");
+		log.info("*************************************************************************");
+		log.info("*");
+	}
+
+	private void logInfos(Class<? extends Configuration> inTypeOfConfiguration, String inDisplayName,
+			Set<String> inActiveEntityIds) {
+
+		log.info("*************************************************************************");
+		log.info("* {}s:", inDisplayName.toLowerCase());
+		Arrays.asList(context.getBeanNamesForType(inTypeOfConfiguration)).forEach(d -> {
+
+			String lActiveEntityId = StringUtils.remove(StringUtils.remove(d, "Config"), "Service");
+			log.info("* \t - {}", lActiveEntityId + (inActiveEntityIds.contains(lActiveEntityId) ? " -> active" : ""));
+		});
+	}
 }
