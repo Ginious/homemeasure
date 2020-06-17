@@ -83,10 +83,6 @@ public final class MqttService extends AbstractService {
         lOptions.setPassword(config.getBroker_password().toCharArray());
       } // if
 
-      log.info("Connecting MQTT using [{}/{}] to [{}]",
-          config.getBroker_user() != null ? config.getBroker_user() : "<anonymous>",
-          config.getBroker_password() != null ? "*******" : "none", config.getBroker_url());
-
       if (config.getBroker_url() == null) {
         log.error("Setting [" + MqttServiceConfig.CONFIG_PREFIX + ".broker-url] is missing!");
         return null;
@@ -108,5 +104,9 @@ public final class MqttService extends AbstractService {
   @Override
   protected void initCustom() {
     initIncludedMeasures(config.getIncluded_measures());
+    
+    log.info("Connecting MQTT using [{}/{}] to [{}]",
+            config.getBroker_user() != null ? config.getBroker_user() : "<anonymous>",
+            config.getBroker_password() != null ? "*******" : "none", config.getBroker_url());
   }
 }
