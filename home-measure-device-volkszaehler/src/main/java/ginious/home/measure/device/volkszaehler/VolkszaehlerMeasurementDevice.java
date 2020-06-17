@@ -1,5 +1,6 @@
 package ginious.home.measure.device.volkszaehler;
 
+import java.awt.font.TextMeasurer;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,165 +34,174 @@ import lombok.extern.slf4j.Slf4j;
 @ConditionalOnProperty(prefix = VolkszaehlerConfig.CONFIG_PREFIX, name = "enabled", matchIfMissing = false)
 public class VolkszaehlerMeasurementDevice extends AbstractMeasurementDevice {
 
-  private enum Measure {
+	private enum Measure {
 
-    ACTUAL("Actual_W"), //
-    ACTUAL_SOLAR_FEED("ActualSolarFeed_W"), //
-    HT("HT_Wh"), //
-    NT("NT_Wh"), //
-    SOLAR_OUT("Solar_Out_Wh"), //
-    TOTAL("Total_Wh");
+		ACTUAL("Actual_W"), //
+		ACTUAL_SOLAR_FEED("ActualSolarFeed_W"), //
+		HT("HT_Wh"), //
+		NT("NT_Wh"), //
+		SOLAR_OUT("Solar_Out_Wh"), //
+		TOTAL("Total_Wh");
 
-    private String id;
+		private String id;
 
-    private Measure(String inId) {
-      id = inId;
-    }
-  }
+		private Measure(String inId) {
+			id = inId;
+		}
+	}
 
-  @Autowired
-  private VolkszaehlerConfig config;
+	@Autowired
+	private VolkszaehlerConfig config;
 
-  /**
-   * The serial receiver for receiving data from the USB device.
-   */
-  private SerialReceiver receiver;
+	/**
+	 * The serial receiver for receiving data from the USB device.
+	 */
+	private SerialReceiver receiver;
 
-  public VolkszaehlerMeasurementDevice() {
-    super();
-  }
+	public VolkszaehlerMeasurementDevice() {
+		super();
+	}
 
-  private SerialReceiver getReceiver() {
+	private SerialReceiver getReceiver() {
 
-    if (receiver == null) {
+		if (receiver == null) {
 
-      try {
-        SerialPort lPort = SerialPortBuilder.newBuilder( //
-            config.getDevice()) //
-            .setBaudRate(config.getBaudrate()) //
-            .setDataBits(DataBits.DATABITS_8) //
-            .setParity(Parity.NONE) //
-            .setStopBits(StopBits.STOPBITS_1) //
-            .setFlowControl(FlowControl.RTS_CTS) //
-            .build();
+			try {
+				SerialPort lPort = SerialPortBuilder
+						.newBuilder( //
+								config.getDevice()) //
+						.setBaudRate(config.getBaudrate()) //
+						.setDataBits(DataBits.DATABITS_8) //
+						.setParity(Parity.NONE) //
+						.setStopBits(StopBits.STOPBITS_1) //
+						.setFlowControl(FlowControl.RTS_CTS) //
+						.build();
 
-        receiver = new SerialReceiver(lPort);
-      }
-      catch (UnsatisfiedLinkError e) {
-        log.error(MarkerFactory.getMarker(getId()), "Failed loading device driver - reason: {}",
-            e.getMessage());
-      }
-      catch (Throwable t) {
-        log.error(MarkerFactory.getMarker(getId()),
-            "Failed to initiate communication with USB dongle - reason: {}", t.getMessage());
-      } // catch
-    } // if
+				receiver = new SerialReceiver(lPort);
+			} catch (UnsatisfiedLinkError e) {
+				log.error(MarkerFactory.getMarker(getId()), "Failed loading device driver - reason: {}",
+						e.getMessage());
+			} catch (Throwable t) {
+				log.error(MarkerFactory.getMarker(getId()),
+						"Failed to initiate communication with USB dongle - reason: {}", t.getMessage());
+			} // catch
+		} // if
 
-    return receiver;
-  }
+		log.info(MarkerFactory.getMarker(getId()), "Connected to device [{}]", config.getDevice());
 
-  protected void initCustom() {
+		return receiver;
+	}
 
-    // register all mesaures provided by SMA converter
-    for (Measure lCurrMeasure : Measure.values()) {
-      registerMeasureId(lCurrMeasure.id);
-    } // for
-  }
+	protected void initCustom() {
 
-  /**
-   * Setter for test purpose.
-   * 
-   * @param inReceiver
-   *          The test receiver mock.
-   */
-  protected void setReceiver(SerialReceiver inReceiver) {
-    receiver = inReceiver;
-  }
+		// register all mesaures provided by SMA converter
+		for (Measure lCurrMeasure : Measure.values()) {
+			registerMeasureId(lCurrMeasure.id);
+		} // for
+	}
 
-  @Override
-  protected void switchOffCustom() {
+	/**
+	 * Setter for test purpose.
+	 * 
+	 * @param inReceiver
+	 *            The test receiver mock.
+	 */
+	protected void setReceiver(SerialReceiver inReceiver) {
+		receiver = inReceiver;
+	}
 
-  }
+	@Override
+	protected void switchOffCustom() {
 
-  @Override
-  protected void switchOnCustom() {
+	}
 
-    for (;;) {
+	@Override
+	protected void switchOnCustom() {
 
-      SerialReceiver lReceiver = getReceiver();
+		for (;;) {
 
-      // quit when device was switched off
-      if (wasSwitchedOff()) {
-        try {
-          lReceiver.close();
-        }
-        catch (IOException e) {
-          // ignore
-        } // catch
-        break;
-      } // if
+			SerialReceiver lReceiver = getReceiver();
 
-      // read next data bucket
-      SmlFile lSmlFile = null;
-      try {
-        if (lReceiver != null) {
-          lSmlFile = lReceiver.getSMLFile();
-        } // if
-      }
-      catch (IOException e) {
-        continue;
-      } // catch
+			// quit when device was switched off
+			if (wasSwitchedOff()) {
+				try {
+					lReceiver.close();
+				} catch (IOException e) {
+					// ignore
+				} // catch
+				break;
+			} // if
 
-      if (lSmlFile != null) {
+			// read next data bucket
+			SmlFile lSmlFile = null;
+			try {
+				if (lReceiver != null) {
+					lSmlFile = lReceiver.getSMLFile();
+				} // if
+			} catch (IOException e) {
+				log.error(MarkerFactory.getMarker(getId()), "Failed to read data from device!", e);
+				continue;
+			} // catch
 
-        List<SmlMessage> lMessages = lSmlFile.getMessages();
-        for (SmlMessage lCurrMessage : lMessages) {
+			if (lSmlFile != null) {
+				processSmlFile(lSmlFile);
+			} // if
 
-          if (lCurrMessage.getMessageBody().getTag() == EMessageBody.GET_LIST_RESPONSE) {
+			sleep(1000);
+		} // for
+	}
 
-            SmlGetListRes lResponse = (SmlGetListRes)lCurrMessage.getMessageBody().getChoice();
-            SmlList lValueList = lResponse.getValList();
-            SmlListEntry[] lListEntries = lValueList.getValListEntry();
-            for (SmlListEntry lCurrEntry : lListEntries) {
+	/**
+	 * Processes the data that was read from the serial USB device and updates
+	 * the corresponding measures.
+	 * 
+	 * @param inSmlFile
+	 *            The data file.
+	 */
+	private void processSmlFile(SmlFile inSmlFile) {
 
-              String lEntryVal = lCurrEntry.getValue().toString();
-              Measure lMeasureToChange;
-              
-              String objName = lCurrEntry.getObjName().toString();
-              if (StringUtils.equals(objName, config.getMeter_ht())) {
-                lMeasureToChange = Measure.HT;
-              }
-              else if (StringUtils.equals(objName, config.getMeter_nt())) {
-                lMeasureToChange = Measure.NT;
-              }
-              else if (StringUtils.equals(objName, config.getMeter_solar())) {
-                lMeasureToChange = Measure.SOLAR_OUT;
-              }
-              else if (StringUtils.equals(objName, config.getMeter_total())) {
-                lMeasureToChange = Measure.TOTAL;
-              }
-              else if (StringUtils.equals(objName, config.getMeter_actual())) {
-                if (StringUtils.startsWith(lEntryVal, "-")) {
-                  
-                  // provide solar feed as separate measure 
-                  lMeasureToChange = Measure.ACTUAL_SOLAR_FEED;
-                  lEntryVal = StringUtils.remove(lEntryVal, "-");
-                }
-                else {
-                  lMeasureToChange = Measure.ACTUAL;
-                } // else
-              }
-              else {
-                throw new IllegalArgumentException("Object [" + objName + "] is not mapped");
-              } // else
+		List<SmlMessage> lMessages = inSmlFile.getMessages();
+		for (SmlMessage lCurrMessage : lMessages) {
 
-              setMeasureValue(lMeasureToChange.id, lEntryVal);
-            } // for
-          } // if
-        } // for
-      } // if
+			if (lCurrMessage.getMessageBody().getTag() == EMessageBody.GET_LIST_RESPONSE) {
 
-      sleep(1000);
-    } // for
-  }
+				SmlGetListRes lResponse = (SmlGetListRes) lCurrMessage.getMessageBody().getChoice();
+				SmlList lValueList = lResponse.getValList();
+				SmlListEntry[] lListEntries = lValueList.getValListEntry();
+				for (SmlListEntry lCurrEntry : lListEntries) {
+
+					String lEntryVal = lCurrEntry.getValue().toString();
+					Measure lMeasureToChange = null;
+
+					String objName = lCurrEntry.getObjName().toString();
+					if (StringUtils.equals(objName, config.getMeter_ht())) {
+						lMeasureToChange = Measure.HT;
+					} else if (StringUtils.equals(objName, config.getMeter_nt())) {
+						lMeasureToChange = Measure.NT;
+					} else if (StringUtils.equals(objName, config.getMeter_solar())) {
+						lMeasureToChange = Measure.SOLAR_OUT;
+					} else if (StringUtils.equals(objName, config.getMeter_total())) {
+						lMeasureToChange = Measure.TOTAL;
+					} else if (StringUtils.equals(objName, config.getMeter_actual())) {
+						if (StringUtils.startsWith(lEntryVal, "-")) {
+
+							// feeding solar power to energy supplier
+							lMeasureToChange = Measure.ACTUAL_SOLAR_FEED;
+							lEntryVal = StringUtils.remove(lEntryVal, "-");
+							setMeasureValue(Measure.ACTUAL.id, "0");
+						} else {
+							
+							// receiving power from energy supplier
+							lMeasureToChange = Measure.ACTUAL;
+							setMeasureValue(Measure.ACTUAL_SOLAR_FEED.id, "0");
+						} // else
+					}
+
+					if (lMeasureToChange != null) {
+						setMeasureValue(lMeasureToChange.id, lEntryVal);
+					} // if
+				} // for
+			} // if
+		} // for
+	}
 }
