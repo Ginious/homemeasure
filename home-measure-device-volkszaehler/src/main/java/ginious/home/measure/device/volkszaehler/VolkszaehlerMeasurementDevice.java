@@ -154,7 +154,7 @@ public class VolkszaehlerMeasurementDevice extends AbstractMeasurementDevice {
             SmlListEntry[] lListEntries = lValueList.getValListEntry();
             for (SmlListEntry lCurrEntry : lListEntries) {
 
-              String lMeasureValue = lCurrEntry.getValue().toString();
+              String lEntryVal = lCurrEntry.getValue().toString();
               Measure lMeasureToChange;
               
               String objName = lCurrEntry.getObjName().toString();
@@ -171,11 +171,11 @@ public class VolkszaehlerMeasurementDevice extends AbstractMeasurementDevice {
                 lMeasureToChange = Measure.TOTAL;
               }
               else if (StringUtils.equals(objName, config.getMeter_actual())) {
-                if (StringUtils.startsWith(lMeasureValue, "-")) {
+                if (StringUtils.startsWith(lEntryVal, "-")) {
                   
                   // provide solar feed as separate measure 
                   lMeasureToChange = Measure.ACTUAL_SOLAR_FEED;
-                  lMeasureValue = StringUtils.remove(lMeasureValue, "-");
+                  lEntryVal = StringUtils.remove(lEntryVal, "-");
                 }
                 else {
                   lMeasureToChange = Measure.ACTUAL;
@@ -185,7 +185,7 @@ public class VolkszaehlerMeasurementDevice extends AbstractMeasurementDevice {
                 throw new IllegalArgumentException("Object [" + objName + "] is not mapped");
               } // else
 
-              setMeasureValue(lMeasureToChange.id, lMeasureValue);
+              setMeasureValue(lMeasureToChange.id, lEntryVal);
             } // for
           } // if
         } // for
