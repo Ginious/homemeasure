@@ -1,10 +1,12 @@
 package ginious.home.measure.device.volkszaehler;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmuc.jrxtx.DataBits;
 import org.openmuc.jrxtx.FlowControl;
 import org.openmuc.jrxtx.Parity;
@@ -33,7 +35,8 @@ public class VolkszaehlerMeasurementDevice extends AbstractMeasurementDevice {
 
   private enum Measure {
 
-    ACTUAL("Actual_Wh"), //
+    ACTUAL("Actual_W"), //
+    ACTUAL_SOLAR_FEED("ActualSolarFeed_W"), //
     HT("HT_Wh"), //
     NT("NT_Wh"), //
     SOLAR_OUT("Solar_Out_Wh"), //
@@ -113,13 +116,6 @@ public class VolkszaehlerMeasurementDevice extends AbstractMeasurementDevice {
   @Override
   protected void switchOnCustom() {
 
-    Map<String, Measure> lMeasuresByObjName = new HashMap<>();
-    lMeasuresByObjName.put(config.getMeter_ht(), Measure.HT);
-    lMeasuresByObjName.put(config.getMeter_nt(), Measure.NT);
-    lMeasuresByObjName.put(config.getMeter_solar(), Measure.SOLAR_OUT);
-    lMeasuresByObjName.put(config.getMeter_total(), Measure.TOTAL);
-    lMeasuresByObjName.put(config.getMeter_actual(), Measure.ACTUAL);
-
     for (;;) {
 
       SerialReceiver lReceiver = getReceiver();
@@ -152,16 +148,44 @@ public class VolkszaehlerMeasurementDevice extends AbstractMeasurementDevice {
         for (SmlMessage lCurrMessage : lMessages) {
 
           if (lCurrMessage.getMessageBody().getTag() == EMessageBody.GET_LIST_RESPONSE) {
-            
+
             SmlGetListRes lResponse = (SmlGetListRes)lCurrMessage.getMessageBody().getChoice();
             SmlList lValueList = lResponse.getValList();
             SmlListEntry[] lListEntries = lValueList.getValListEntry();
             for (SmlListEntry lCurrEntry : lListEntries) {
 
-              Measure lMeasure = lMeasuresByObjName.get(lCurrEntry.getObjName().toString());
-              if (lMeasure != null) {
-                setMeasureValue(lMeasure.id, lCurrEntry.getValue().toString());
-              } // if
+              String lMeasureValue = lCurrEntry.getValue().toString();
+              Measure lMeasureToChange;
+              
+              String objName = lCurrEntry.getObjName().toString();
+              if (StringUtils.equals(objName, config.getMeter_ht())) {
+                lMeasureToChange = Measure.HT;
+              }
+              else if (StringUtils.equals(objName, config.getMeter_nt())) {
+                lMeasureToChange = Measure.NT;
+              }
+              else if (StringUtils.equals(objName, config.getMeter_solar())) {
+                lMeasureToChange = Measure.SOLAR_OUT;
+              }
+              else if (StringUtils.equals(objName, config.getMeter_total())) {
+                lMeasureToChange = Measure.TOTAL;
+              }
+              else if (StringUtils.equals(objName, config.getMeter_actual())) {
+                if (StringUtils.startsWith(lMeasureValue, "-")) {
+                  
+                  // provide solar feed as separate measure 
+                  lMeasureToChange = Measure.ACTUAL_SOLAR_FEED;
+                  lMeasureValue = StringUtils.remove(lMeasureValue, "-");
+                }
+                else {
+                  lMeasureToChange = Measure.ACTUAL;
+                } // else
+              }
+              else {
+                throw new IllegalArgumentException("Object [" + objName + "] is not mapped");
+              } // else
+
+              setMeasureValue(lMeasureToChange.id, lMeasureValue);
             } // for
           } // if
         } // for
