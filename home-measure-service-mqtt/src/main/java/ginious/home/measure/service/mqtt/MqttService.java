@@ -70,8 +70,8 @@ public final class MqttService extends AbstractService {
     if (brokerClient == null || !brokerClient.isConnected()) {
 
       MqttConnectOptions lOptions = new MqttConnectOptions();
-      lOptions.setConnectionTimeout(60);
-      lOptions.setAutomaticReconnect(false);
+      lOptions.setConnectionTimeout(0);
+      lOptions.setAutomaticReconnect(true);
 
       // User
       if (StringUtils.isNotBlank(config.getBroker_user())) {
