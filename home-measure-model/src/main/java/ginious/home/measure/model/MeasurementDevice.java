@@ -5,14 +5,7 @@ import java.util.Set;
 /**
  * Interface of a common measure device as it is used in a home measure server instance.
  */
-public interface MeasurementDevice {
-
-  /**
-   * Gets the unique identifier of the device.
-   * 
-   * @return The identifier.
-   */
-  String getId();
+public interface MeasurementDevice extends HasIdentifier {
 
   /**
    * Switch device on.

@@ -3,7 +3,6 @@ package ginious.home.measure.server;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,18 +20,28 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class HomeMeasureRestService {
 
-  @Autowired
   private MeasureCache cache;
+  private List<MeasurementsSerializer> serializers;
 
   /**
-   * All serializer that are available.
+   * DI constructor called by Spring.
+   * 
+   * @param inCache
+   *          The cache for measurements.
+   * @param inSerializers
+   *          All serializer instances that are around in the classpath below package ginious.home.measure.
    */
-  @Autowired(required = false)
-  private List<MeasurementsSerializer> serializers;
+  public HomeMeasureRestService(MeasureCache inCache, List<MeasurementsSerializer> inSerializers) {
+    super();
+
+    cache = inCache;
+    serializers = inSerializers;
+  }
 
   // TODO content type must be dynamic
   // TODO define custom path
-  @GetMapping(path = "/measures", produces = {"application/json", "application/xml", "text/html", "text/plain"})
+  @GetMapping(path = "/measures", produces = {"application/json", "application/xml", "text/html",
+      "text/plain"})
   public String measures(
       @RequestParam(name = "serializer", required = false) String inSerializerId) {
 

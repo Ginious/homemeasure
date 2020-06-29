@@ -10,18 +10,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.MarkerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import ginious.home.measure.device.radio.RTL433Stub.Option;
 import ginious.home.measure.model.AbstractMeasurementDevice;
+import ginious.home.measure.model.MeasureCache;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 @ConditionalOnProperty(prefix = RadioConfig.CONFIG_PREFIX, name = "enabled", matchIfMissing = false)
-public class RadioReceiverDevice extends AbstractMeasurementDevice {
+public class RadioReceiverDevice extends AbstractMeasurementDevice<RadioConfig> {
 
   private static final String SETTING_SEPARATOR_CSV = ",";
 
@@ -29,9 +29,6 @@ public class RadioReceiverDevice extends AbstractMeasurementDevice {
   private static final String MESSAGE_DATA = "{";
 
   private static final String MEASURE_NAME_SEPARATOR = "-";
-
-  @Autowired
-  private RadioConfig config;
 
   /**
    * Registry containing all items defined in hmserver.ini.
@@ -44,12 +41,17 @@ public class RadioReceiverDevice extends AbstractMeasurementDevice {
   private RTL433Stub processStubForTesting;
 
   /**
-   * Default constructor.
+   * DI constructor called by Spring.
+   * 
+   * @param inCache
+   *          The cache for measurements.
+   * @param inConfig
+   *          The device configuration.
    */
-  public RadioReceiverDevice() {
-    super();
+  public RadioReceiverDevice(MeasureCache inCache, RadioConfig inConfig) {
+    super(inCache, inConfig);
   }
-  
+
   /**
    * Creates and initializes the RTL_433 process and provides a stub for accessing
    * the resulting data.
@@ -99,7 +101,7 @@ public class RadioReceiverDevice extends AbstractMeasurementDevice {
   private Set<String> getConfiguredProtocols() {
 
     Set<String> outProtocols = new HashSet<>();
-    String lDeviceProtocolsCsv = config.getProtocols();
+    String lDeviceProtocolsCsv = getConfig().getProtocols();
     if (lDeviceProtocolsCsv != null) {
       for (String lCurrProtocol : StringUtils.split(lDeviceProtocolsCsv, SETTING_SEPARATOR_CSV)) {
         outProtocols.add(lCurrProtocol);

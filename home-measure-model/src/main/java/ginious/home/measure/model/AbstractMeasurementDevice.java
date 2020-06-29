@@ -7,19 +7,19 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Base type for concrete device implementations providing basic functionality.
  */
-public abstract class AbstractMeasurementDevice implements MeasurementDevice {
+public abstract class AbstractMeasurementDevice<T extends DeviceConfiguration>
+    implements MeasurementDevice {
 
   /**
    * Cache for measures.
    */
-  @Autowired
   private MeasureCache cache;
 
+  private T config;
   /**
    * Each device must have a unique identifier.
    */
@@ -42,9 +42,15 @@ public abstract class AbstractMeasurementDevice implements MeasurementDevice {
 
   /**
    * Default constructor.
+   * 
+   * @param inCache
+   *          The underlying cache for measurements.
    */
-  protected AbstractMeasurementDevice() {
+  protected AbstractMeasurementDevice(MeasureCache inCache, T inConfig) {
     super();
+
+    cache = inCache;
+    config = inConfig;
 
     id = StringUtils.remove(getClass().getSimpleName(), MeasurementDevice.class.getSimpleName())
         .toLowerCase();
@@ -66,6 +72,15 @@ public abstract class AbstractMeasurementDevice implements MeasurementDevice {
    * Overwrite method in specific device for custom initialization purposes.
    */
   protected void initCustom() {}
+
+  /**
+   * Gets the underlying configuration.
+   * 
+   * @return The configuration.
+   */
+  protected final T getConfig() {
+    return config;
+  }
 
   @Override
   public final String getId() {

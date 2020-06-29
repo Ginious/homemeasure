@@ -4,12 +4,12 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import ginious.home.measure.model.AbstractService;
 import ginious.home.measure.model.Measure;
+import ginious.home.measure.model.MeasureCache;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -18,10 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @ConditionalOnProperty(prefix = MqttServiceConfig.CONFIG_PREFIX, name = "enabled", matchIfMissing = false)
-public final class MqttService extends AbstractService {
-
-  @Autowired
-  private MqttServiceConfig config;
+public final class MqttService extends AbstractService<MqttServiceConfig> {
 
   /**
    * MQTT broker client for publishing measures.
@@ -29,10 +26,15 @@ public final class MqttService extends AbstractService {
   private MqttClient brokerClient;
 
   /**
-   * Default constructor.
+   * DI constructor called by Spring.
+   * 
+   * @param inCache
+   *          The cache for measurements.
+   * @param inConfig
+   *          The service configuration.
    */
-  public MqttService() {
-    super();
+  public MqttService(MeasureCache inCache, MqttServiceConfig inConfig) {
+    super(inCache, inConfig);
   }
 
   protected void measureChangedCustom(Measure inChangedMeasure) {
@@ -40,7 +42,7 @@ public final class MqttService extends AbstractService {
     try {
       MqttClient lClient = getBrokerClient();
       if (lClient != null) {
-        lClient.publish(config.getTopic_root() + "/" + inChangedMeasure.getDeviceId() + "/"
+        lClient.publish(getConfig().getTopic_root() + "/" + inChangedMeasure.getDeviceId() + "/"
             + inChangedMeasure.getId(), inChangedMeasure.getValue().getBytes(), 0, false);
         log.debug("Published measure [{}.{}={}]", inChangedMeasure.getDeviceId(),
             inChangedMeasure.getId(), inChangedMeasure.getValue());
@@ -74,27 +76,27 @@ public final class MqttService extends AbstractService {
       lOptions.setAutomaticReconnect(true);
 
       // User
-      if (StringUtils.isNotBlank(config.getBroker_user())) {
-        lOptions.setUserName(config.getBroker_user());
+      if (StringUtils.isNotBlank(getConfig().getBroker_user())) {
+        lOptions.setUserName(getConfig().getBroker_user());
       } // if
 
       // Password
-      if (StringUtils.isNotBlank(config.getBroker_password())) {
-        lOptions.setPassword(config.getBroker_password().toCharArray());
+      if (StringUtils.isNotBlank(getConfig().getBroker_password())) {
+        lOptions.setPassword(getConfig().getBroker_password().toCharArray());
       } // if
 
-      if (config.getBroker_url() == null) {
+      if (getConfig().getBroker_url() == null) {
         log.error("Setting [" + MqttServiceConfig.CONFIG_PREFIX + ".broker-url] is missing!");
         return null;
       } // if
 
       // connect
       try {
-        brokerClient = new MqttClient(config.getBroker_url(), getClass().getName());
+        brokerClient = new MqttClient(getConfig().getBroker_url(), getClass().getName());
         brokerClient.connect(lOptions);
       }
       catch (Throwable t) {
-        log.error("Failed to connect to MQTT broker [" + config.getBroker_url() + "]!", t);
+        log.error("Failed to connect to MQTT broker [" + getConfig().getBroker_url() + "]!", t);
       } // catch
     } // else
 
@@ -103,10 +105,10 @@ public final class MqttService extends AbstractService {
 
   @Override
   protected void initCustom() {
-    initIncludedMeasures(config.getIncluded_measures());
-    
+    initIncludedMeasures(getConfig().getIncluded_measures());
+
     log.info("Connecting MQTT using [{}/{}] to [{}]",
-            config.getBroker_user() != null ? config.getBroker_user() : "<anonymous>",
-            config.getBroker_password() != null ? "*******" : "none", config.getBroker_url());
+        getConfig().getBroker_user() != null ? getConfig().getBroker_user() : "<anonymous>",
+        getConfig().getBroker_password() != null ? "*******" : "none", getConfig().getBroker_url());
   }
 }
